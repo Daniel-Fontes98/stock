@@ -43,7 +43,7 @@ const Home: NextPage = () => {
             setMessage={setMessage}
             setType={setType}
           />
-          <ClientSideTable objectId={objectId} setObjectId={setObjectId} />
+          <ClientSideTable setObjectId={setObjectId} />
         </div>
       </main>
     </>

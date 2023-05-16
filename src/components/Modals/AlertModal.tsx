@@ -3,7 +3,7 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { type NextPage } from "next";
@@ -41,7 +41,7 @@ const AlertModal: NextPage = () => {
                     {headers.map((header) => {
                       const direction = header.column.getIsSorted();
 
-                      const arrow: any = {
+                      const arrow = {
                         asc: "🔼",
                         desc: "🔽",
                       };

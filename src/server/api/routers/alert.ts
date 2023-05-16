@@ -41,7 +41,7 @@ export const alertRouter = createTRPCRouter({
     )
     .mutation(async (opts) => {
       const { input } = opts;
-      opts.ctx.prisma.alert.delete({
+      await opts.ctx.prisma.alert.delete({
         where: {
           id: input.id,
         },

@@ -3,20 +3,19 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { api } from "~/utils/api";
 import { itemColumnDefs } from "./ItemColumnDefs";
 import Pagination from "./Pagination";
 
 interface objectState {
-  objectId: string;
   setObjectId: Dispatch<SetStateAction<string>>;
 }
 
-const ClientSideTable = ({ objectId, setObjectId }: objectState) => {
+const ClientSideTable = ({ setObjectId }: objectState) => {
   const data = api.items.getAll.useQuery().data;
   const [sorting, setSorting] = useState<SortingState>([]);
 
@@ -38,7 +37,7 @@ const ClientSideTable = ({ objectId, setObjectId }: objectState) => {
   const handleClick = (id: string) => {
     setObjectId(id);
   };
-  if (rows && headers)
+  if (rows && headers && data)
     return (
       <div>
         <table className="table-zebra my-4 table w-full">
@@ -46,7 +45,7 @@ const ClientSideTable = ({ objectId, setObjectId }: objectState) => {
             <tr>
               {headers.map((header) => {
                 const direction = header.column.getIsSorted();
-                const arrow: any = {
+                const arrow = {
                   asc: "🔼",
                   desc: "🔽",
                 };
@@ -81,8 +80,8 @@ const ClientSideTable = ({ objectId, setObjectId }: objectState) => {
                 ))}
                 <label
                   htmlFor="my-modal-4"
-                  className="btn-accent btn-circle btn ml-6 w-1/2 text-xs"
-                  onClick={() => handleClick(data![Number(row.id)]!.id)}
+                  className="btn-accent btn-md btn ml-6 w-1/2 text-xs"
+                  onClick={() => handleClick(data[Number(row.id)]!.id)}
                 >
                   Movimentar
                 </label>

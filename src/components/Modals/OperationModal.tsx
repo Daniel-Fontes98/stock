@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { api } from "~/utils/api";
 
 interface operationModalProps {
@@ -22,9 +22,9 @@ const OperationModal = ({
   const object = api.items.getOne.useQuery({ id: objectId });
 
   const adicionarOperacao = () => {
-    if (quantity) {
+    if (quantity && object.data) {
       if (operationType === "Remover" && object.isFetched) {
-        if (unitType === "CX" && quantity > object.data!.quantityBox) {
+        if (unitType === "CX" && quantity > object.data.quantityBox) {
           setMessage("Quantidade insuficiente para fazer movimentação");
           setType("error");
           setTimeout(() => {
@@ -32,7 +32,7 @@ const OperationModal = ({
             setType("");
           }, 5000);
           return;
-        } else if (unitType === "UN" && quantity > object.data!.quantityUnit) {
+        } else if (unitType === "UN" && quantity > object.data.quantityUnit) {
           console.log("hello");
           setMessage("Quantidade insuficiente para fazer movimentação");
           setType("error");
@@ -43,8 +43,7 @@ const OperationModal = ({
           return;
         }
       }
-      console.log;
-      const example = mutation.mutate({
+      mutation.mutate({
         operationType: operationType,
         quantity: quantity,
         unitType: unitType,
@@ -53,10 +52,9 @@ const OperationModal = ({
         description: description,
         deliveredTo: deliveredTo,
       });
-      console.log(operationType);
-      console.log(unitType);
+
       setMessage(
-        `Operação ${operationType} ${quantity} ${object.data?.name} executado com sucesso `
+        `Operação ${operationType} ${quantity} ${object.data.name} executado com sucesso `
       );
       setType("notification");
       setTimeout(() => {

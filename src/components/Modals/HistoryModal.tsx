@@ -1,5 +1,5 @@
 import {
-  SortingState,
+  type SortingState,
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
@@ -42,7 +42,7 @@ const HistoryModal: NextPage = () => {
                     {headers.map((header) => {
                       const direction = header.column.getIsSorted();
 
-                      const arrow: any = {
+                      const arrow = {
                         asc: "🔼",
                         desc: "🔽",
                       };

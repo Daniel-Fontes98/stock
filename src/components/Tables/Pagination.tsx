@@ -1,4 +1,4 @@
-import { Table } from "@tanstack/react-table";
+import { type Table } from "@tanstack/react-table";
 
 type Props = {
   table: Table<any>;
@@ -10,7 +10,7 @@ const Pagination = ({ table }: Props) => {
   return (
     <div className="my-2">
       <div className="flex items-center gap-2">
-        <div className="btn-group btn-sm">
+        <div className="btn-sm btn-group">
           <button
             className="btn-sm btn"
             onClick={() => table.setPageIndex(0)}
