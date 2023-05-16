@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String      @unique
+  quantityUnit Int         @default(0)
+  quantityBox  Int         @default(0)
+  quantityInBox Int @default(0)
+  Total Int @default(0) //Total = quantityUnit + quantityBox * quantityInBox
+  alertMin     Int    
+  operations   Operation[]
+  alert Alert?
+}
+
+model Operation {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  operationType String //Adicionar ou remover
+  quantity      Int
+  unitType      String //caixa ou unidade
+  deliveredTo String?
+  reference     String?
+  description   String?
+  item          Item     @relation(fields: [itemId], references: [id])
+  itemId        String
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  item      Item     @relation(fields: [itemId], references: [id])
+  itemId    String @unique
+}
