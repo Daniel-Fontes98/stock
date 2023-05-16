@@ -4,7 +4,7 @@ export type Operation = {
   operationType: string;
   quantity: number;
   unitType: string;
-  deliveredTo: string;
+  deliveredTo: string | null;
   item: {
     name: string;
   };
