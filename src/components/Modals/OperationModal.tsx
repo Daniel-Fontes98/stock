@@ -43,17 +43,18 @@ const OperationModal = ({
           return;
         }
       }
+      console.log;
       const example = mutation.mutate({
-        operationType,
-        quantity,
-        unitType,
+        operationType: operationType,
+        quantity: quantity,
+        unitType: unitType,
         itemId: objectId,
-        reference,
-        description,
-        deliveredTo,
+        reference: reference,
+        description: description,
+        deliveredTo: deliveredTo,
       });
-      console.log("HERE");
-      console.log(example);
+      console.log(operationType);
+      console.log(unitType);
       setMessage(
         `Operação ${operationType} ${quantity} ${object.data?.name} executado com sucesso `
       );
@@ -83,9 +84,10 @@ const OperationModal = ({
                 onChange={(event) => setOperationType(event.target.value)}
                 className="select-bordered select"
                 required
-                defaultValue={""}
               >
-                <option disabled>Escolher uma</option>
+                <option disabled selected>
+                  Escolher uma
+                </option>
                 <option value="Adicionar">Adicionar</option>
                 <option value="Remover">Remover</option>
               </select>
@@ -109,11 +111,12 @@ const OperationModal = ({
               </label>
               <select
                 onChange={(event) => setUnitType(event.target.value)}
-                defaultValue={""}
                 className="select-bordered select"
                 required
               >
-                <option disabled>Escolher uma</option>
+                <option disabled selected>
+                  Escolher uma
+                </option>
                 <option value="CX">Caixas</option>
                 <option value="UN">Unidade</option>
               </select>

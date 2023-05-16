@@ -29,6 +29,7 @@ export const operationRouter = createTRPCRouter({
           id: input.itemId,
         },
       });
+      if (!itemToUpdate) return null;
       if (input.unitType === "CX") {
         if (input.operationType === "Adicionar") {
           item = await opts.ctx.prisma.item.update({
@@ -62,7 +63,7 @@ export const operationRouter = createTRPCRouter({
             },
           });
         }
-      } else if (input.unitType === "UN") {
+      } else {
         if (input.operationType === "Adicionar") {
           item = await opts.ctx.prisma.item.update({
             where: {
@@ -116,5 +117,6 @@ export const operationRouter = createTRPCRouter({
         });
         return operation;
       }
+      return null;
     }),
 });

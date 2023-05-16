@@ -3,18 +3,12 @@ import { Operation } from "~/types/Operation";
 
 const columnHelper = createColumnHelper<Operation>();
 
-const options = {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: "numeric",
-};
-
 export const operationColumnDefs = [
   columnHelper.accessor(
-    (row) => row.createdAt.toLocaleDateString(undefined, options),
+    (row) =>
+      row.createdAt
+        .toLocaleDateString()
+        .concat(" " + row.createdAt.toLocaleTimeString()),
     {
       id: "createdAt",
       cell: (info) => info.getValue(),

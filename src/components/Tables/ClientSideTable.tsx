@@ -79,15 +79,13 @@ const ClientSideTable = ({ objectId, setObjectId }: objectState) => {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-                <td>
-                  <label
-                    htmlFor="my-modal-4"
-                    className="btn-accent btn-circle btn ml-6 w-1/2 text-xs"
-                    onClick={() => handleClick(data![Number(row.id)]!.id)}
-                  >
-                    Movimentar
-                  </label>
-                </td>
+                <label
+                  htmlFor="my-modal-4"
+                  className="btn-accent btn-circle btn ml-6 w-1/2 text-xs"
+                  onClick={() => handleClick(data![Number(row.id)]!.id)}
+                >
+                  Movimentar
+                </label>
               </tr>
             ))}
           </tbody>

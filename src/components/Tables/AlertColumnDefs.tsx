@@ -1,20 +1,16 @@
 import { Alert } from "~/types/Alert";
 import { createColumnHelper } from "@tanstack/react-table";
 
-const options = {
-  year: "numeric",
-  month: "numeric",
-  day: "numeric",
-  hour: "numeric",
-  minute: "numeric",
-  second: "numeric",
-};
+const test = Intl.DateTimeFormat;
 
 const columnHelper = createColumnHelper<Alert>();
 
 export const alertColumnDefs = [
   columnHelper.accessor(
-    (row) => row.createdAt.toLocaleDateString(undefined, options),
+    (row) =>
+      row.createdAt
+        .toLocaleDateString()
+        .concat(" " + row.createdAt.toLocaleTimeString()),
     {
       id: "createdAt",
       cell: (info) => info.getValue(),
