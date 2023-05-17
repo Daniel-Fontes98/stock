@@ -35,4 +35,9 @@ export const alertColumnDefs = [
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Total</span>,
   }),
+  columnHelper.accessor((row) => row.item.alertMin, {
+    id: "itemAlertMin",
+    cell: (info) => <span>{info.getValue()}</span>,
+    header: () => <span>Valor Minimo</span>,
+  }),
 ];

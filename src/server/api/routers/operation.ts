@@ -44,11 +44,17 @@ export const operationRouter = createTRPCRouter({
             },
           });
           if (item.Total > item.alertMin) {
-            await opts.ctx.prisma.alert.delete({
+            const alert = await opts.ctx.prisma.alert.findFirst({
               where: {
-                itemId: item.id,
+                itemId: input.itemId,
               },
             });
+            if (alert)
+              await opts.ctx.prisma.alert.delete({
+                where: {
+                  itemId: item.id,
+                },
+              });
           }
         } else if (input.operationType === "Remover") {
           item = await opts.ctx.prisma.item.update({

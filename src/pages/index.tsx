@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="container">
+        <div className="container mb-5">
           <label htmlFor="my-modal-5" className="btn-info btn">
             Adicionar Item
           </label>

@@ -20,11 +20,13 @@ const OperationModal = ({
   const [deliveredTo, setDeliveredTo] = useState("");
   const mutation = api.operations.insertOne.useMutation();
   const object = api.items.getOne.useQuery({ id: objectId });
+  if (!objectId) return null;
 
   const adicionarOperacao = () => {
     if (quantity && object.data) {
       if (operationType === "Remover" && object.isFetched) {
         if (unitType === "CX" && quantity > object.data.quantityBox) {
+          console.log("HEY");
           setMessage("Quantidade insuficiente para fazer movimentação");
           setType("error");
           setTimeout(() => {
@@ -33,7 +35,7 @@ const OperationModal = ({
           }, 5000);
           return;
         } else if (unitType === "UN" && quantity > object.data.quantityUnit) {
-          console.log("hello");
+          console.log("HEY");
           setMessage("Quantidade insuficiente para fazer movimentação");
           setType("error");
           setTimeout(() => {
@@ -54,12 +56,13 @@ const OperationModal = ({
       });
 
       setMessage(
-        `Operação ${operationType} ${quantity} ${object.data.name} executado com sucesso `
+        `Operação ${operationType} ${quantity} ${unitType} ${object.data.name} executado com sucesso `
       );
       setType("notification");
       setTimeout(() => {
         setMessage("");
         setType("");
+        window.location.reload();
       }, 5000);
       setQuantity(0);
       setReference("");

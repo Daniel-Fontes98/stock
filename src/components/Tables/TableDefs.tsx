@@ -1,30 +1,28 @@
+import { Alert, Operation } from "@prisma/client";
 import {
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
+  SortingState,
   useReactTable,
-  type ColumnFiltersState,
+  getCoreRowModel,
+  getSortedRowModel,
+  getPaginationRowModel,
+  flexRender,
+  ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { type Dispatch, type SetStateAction, useState } from "react";
-import { api } from "~/utils/api";
+import { useState } from "react";
 import Filter from "./ColumnFilter";
-import { itemColumnDefs } from "./ItemColumnDefs";
 import Pagination from "./Pagination";
 
-interface objectState {
-  setObjectId: Dispatch<SetStateAction<string>>;
+interface TableProps {
+  data: (Alert | Operation)[];
+  columnDefs: any;
 }
 
-const ClientSideTable = ({ setObjectId }: objectState) => {
-  const data = api.items.getAll.useQuery().data;
+const TableDefs = ({ data, columnDefs }: TableProps) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
   const table = useReactTable({
-    columns: itemColumnDefs,
+    columns: columnDefs,
     data: data ?? [],
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -37,21 +35,17 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
   });
-
-  const headers = table?.getFlatHeaders();
-  const rows = table?.getRowModel().rows;
-
-  const handleClick = (id: string) => {
-    setObjectId(id);
-  };
-  if (rows && headers && data)
+  const headers = table.getFlatHeaders();
+  const rows = table.getRowModel().rows;
+  if (data)
     return (
-      <div>
+      <div className="overflow-x-auto">
         <table className="table-zebra my-4 table w-full">
           <thead>
             <tr>
               {headers.map((header) => {
                 const direction = header.column.getIsSorted();
+
                 const arrow = {
                   asc: "🔼",
                   desc: "🔽",
@@ -92,13 +86,6 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-                <label
-                  htmlFor="my-modal-4"
-                  className="btn-accent btn-md btn ml-6  w-3/4 text-xs"
-                  onClick={() => handleClick(data[Number(row.id)]!.id)}
-                >
-                  Movimentar
-                </label>
               </tr>
             ))}
           </tbody>
@@ -109,4 +96,4 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
   return <div></div>;
 };
 
-export default ClientSideTable;
+export default TableDefs;

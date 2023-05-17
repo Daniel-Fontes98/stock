@@ -41,13 +41,13 @@ const Pagination = ({ table }: Props) => {
           </button>
         </div>
         <span className="flex items-center gap-1">
-          <div>Page</div>
+          <div>Pagina</div>
           <strong>
-            {state.pageIndex + 1} of {table.getPageCount()}
+            {state.pageIndex + 1} de {table.getPageCount()}
           </strong>
         </span>
         <span className="flex items-center gap-1">
-          | Go to page:
+          | Ir para:
           <input
             defaultValue={state.pageIndex + 1}
             type="number"
@@ -65,7 +65,7 @@ const Pagination = ({ table }: Props) => {
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
-              Show {pageSize}
+              Ver {pageSize}
             </option>
           ))}
         </select>

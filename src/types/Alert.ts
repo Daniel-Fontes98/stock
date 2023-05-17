@@ -5,5 +5,6 @@ export type Alert = {
     quantityUnit: number;
     quantityBox: number;
     Total: number;
+    alertMin: number;
   };
 };
