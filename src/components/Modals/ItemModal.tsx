@@ -23,7 +23,6 @@ const ItemModal = ({ setMessage, setType }: ItemModalProps) => {
         setType("");
         setMessage("");
         setAlertMin(0);
-        window.location.reload();
       }, 5000);
     }
   };

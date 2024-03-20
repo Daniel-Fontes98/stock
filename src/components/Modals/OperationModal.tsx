@@ -62,7 +62,6 @@ const OperationModal = ({
       setTimeout(() => {
         setMessage("");
         setType("");
-        window.location.reload();
       }, 5000);
       setQuantity(0);
       setReference("");
