@@ -1,3 +1,4 @@
+import { Item } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -9,7 +10,7 @@ export const operationRouter = createTRPCRouter({
       },
     });
   }),
-  insertOne: publicProcedure
+  operationBox: publicProcedure
     .input(
       z.object({
         operationType: z.string(),
@@ -19,116 +20,62 @@ export const operationRouter = createTRPCRouter({
         description: z.string().optional(),
         itemId: z.string(),
         deliveredTo: z.string().optional(),
+        item: z.object({
+          quantityInBox: z.number(),
+          quantityUnit: z.number(),
+          quantityBox: z.number(),
+          alertMax: z.number(),
+          alertMin: z.number(),
+          Total: z.number(),
+        }),
       })
     )
-    .mutation(async (opts) => {
-      const { input } = opts;
-      let item;
-      const itemToUpdate = await opts.ctx.prisma.item.findFirst({
+    .mutation(async ({ ctx, input }) => {
+      //Update Totals
+      const operation =
+        input.operationType === "Adicionar" ? "increment" : "decrement";
+
+      const result: Item = await ctx.prisma.item.update({
         where: {
           id: input.itemId,
         },
+        data: {
+          quantityBox: { [operation]: input.quantity },
+          Total: { [operation]: input.quantity * input.item.quantityInBox },
+          operations: {
+            //Create Operation
+            create: {
+              operationType: input.operationType,
+              quantity: input.quantity,
+              unitType: input.unitType,
+              reference: input.reference,
+              description: input.description,
+              deliveredTo: input.deliveredTo,
+            },
+          },
+        },
       });
-      if (!itemToUpdate) return null;
-      if (input.unitType === "CX") {
-        if (input.operationType === "Adicionar") {
-          item = await opts.ctx.prisma.item.update({
-            where: {
-              id: input.itemId,
-            },
-            data: {
-              quantityBox: { increment: input.quantity },
-              Total: {
-                increment: input.quantity * itemToUpdate.quantityInBox,
-              },
-            },
-          });
-          if (item.Total > item.alertMin) {
-            const alert = await opts.ctx.prisma.alert.findFirst({
-              where: {
-                itemId: input.itemId,
-              },
-            });
-            if (alert)
-              await opts.ctx.prisma.alert.delete({
-                where: {
-                  itemId: item.id,
-                },
-              });
-          }
-        } else if (input.operationType === "Remover") {
-          item = await opts.ctx.prisma.item.update({
-            where: {
-              id: input.itemId,
-            },
-            data: {
-              quantityBox: { decrement: input.quantity },
-              Total: {
-                decrement: input.quantity * itemToUpdate.quantityInBox,
-              },
-            },
-          });
-        }
+
+      let alertType;
+      if (result.Total < result.alertMax) {
+        alertType = "Rutura";
+      } else if (result.Total < result.alertMin) {
+        alertType = "Minimo";
       } else {
-        if (input.operationType === "Adicionar") {
-          item = await opts.ctx.prisma.item.update({
-            where: {
-              id: input.itemId,
-            },
-            data: {
-              quantityUnit: { increment: input.quantity },
-              Total: {
-                increment: input.quantity,
-              },
-            },
-          });
-          if (item.Total > item.alertMin) {
-            const alert = await opts.ctx.prisma.alert.findFirst({
-              where: {
-                itemId: input.itemId,
-              },
-            });
-            if (alert)
-              await opts.ctx.prisma.alert.delete({
-                where: {
-                  itemId: item.id,
-                },
-              });
-          }
-        } else if (input.operationType === "Remover") {
-          item = await opts.ctx.prisma.item.update({
-            where: {
-              id: input.itemId,
-            },
-            data: {
-              quantityUnit: { decrement: input.quantity },
-              Total: {
-                decrement: input.quantity,
-              },
-            },
-          });
-        }
+        alertType = "Normal";
       }
-      if (item) {
-        if (item.Total < item.alertMin) {
-          const alert = await opts.ctx.prisma.alert.findFirst({
-            where: {
-              itemId: item.id,
-            },
-          });
-          if (!alert) {
-            await opts.ctx.prisma.alert.create({
-              data: {
-                itemId: item.id,
-              },
-            });
-          }
-        }
-        const operation = await opts.ctx.prisma.operation.create({
-          data: input,
-        });
-        return operation;
-      }
-      return null;
+
+      await ctx.prisma.alert.upsert({
+        create: {
+          type: alertType,
+          itemId: result.id,
+        },
+        update: {
+          type: alertType,
+        },
+        where: {
+          itemId: result.id,
+        },
+      });
     }),
 });

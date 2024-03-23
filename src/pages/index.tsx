@@ -2,11 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import ClientSideTable from "~/components/Tables/ClientSideTable";
-import HistoryModal from "~/components/Modals/HistoryModal";
 import ItemModal from "~/components/Modals/ItemModal";
 import OperationModal from "~/components/Modals/OperationModal";
 import Notification from "~/components/Notification";
-import AlertModal from "~/components/Modals/AlertModal";
+import SupplierModal from "~/components/Modals/SupplierModal";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   const [objectId, setObjectId] = useState("");
@@ -16,36 +16,73 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Gestão de Stock</title>
+        <title>GestÃ£o de Stock</title>
         <meta name="description" content="Gerado por Daniel" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="container mb-5">
-          <label htmlFor="my-modal-5" className="btn-info btn">
-            Adicionar Item
-          </label>
-          <label htmlFor="my-modal-6" className="btn-warning btn ml-5">
-            Ver Historico
-          </label>
-          <label htmlFor="my-modal-7" className="btn-error btn ml-5">
-            Ver Alertas
+      <div className="drawer-mobile drawer">
+        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col items-center justify-center">
+          <main className="absolute bottom-6 left-96 right-6 top-6 min-h-screen items-center justify-center">
+            <div className="container mx-auto">
+              <Notification message={message} type={type} />
+              <SupplierModal setMessage={setMessage} setType={setType} />
+              <ItemModal setMessage={setMessage} setType={setType} />
+              <OperationModal
+                objectId={objectId}
+                setMessage={setMessage}
+                setType={setType}
+              />
+              <ClientSideTable setObjectId={setObjectId} />
+            </div>
+          </main>
+          <label
+            htmlFor="my-drawer-2"
+            className="btn-primary drawer-button btn lg:hidden"
+          >
+            Open drawer
           </label>
         </div>
-
-        <div className="container mx-auto">
-          <Notification message={message} type={type} />
-          <AlertModal />
-          <HistoryModal />
-          <ItemModal setMessage={setMessage} setType={setType} />
-          <OperationModal
-            objectId={objectId}
-            setMessage={setMessage}
-            setType={setType}
-          />
-          <ClientSideTable setObjectId={setObjectId} />
+        <div className="drawer-side fixed left-0 top-0 h-full w-80 bg-slate-400">
+          <label htmlFor="my-drawer-2" className="drawer-overlay "></label>
+          <ul className="menu w-80  bg-slate-200 p-4 text-base-content">
+            <li>
+              <label htmlFor="my-modal-5" className="btn-info btn my-2">
+                Adicionar Item
+              </label>
+            </li>
+            <li>
+              <label htmlFor="my-modal-8" className="btn-info btn my-2">
+                Adicionar Fornecedor
+              </label>
+            </li>
+            <li>
+              <Link
+                href="/Operation/History"
+                className="btn-warning btn my-2 hover:cursor-pointer"
+              >
+                <label>Ver Historico</label>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/Suppliers/Table"
+                className="btn-warning btn my-2 hover:cursor-pointer"
+              >
+                <label>Ver Fornecedores</label>
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/Alerts/AlertsTable"
+                className="btn-error btn my-2 hover:cursor-pointer"
+              >
+                <label>Ver Alertas</label>
+              </Link>
+            </li>
+          </ul>
         </div>
-      </main>
+      </div>
     </>
   );
 };

@@ -6,7 +6,7 @@ const columnHelper = createColumnHelper<Item>();
 export const itemColumnDefs = [
   columnHelper.accessor((row) => row.name, {
     id: "name",
-    cell: (info) => info.getValue(),
+    cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Nome</span>,
   }),
   columnHelper.accessor((row) => row.quantityUnit, {
@@ -19,13 +19,8 @@ export const itemColumnDefs = [
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Quantidade (caixas)</span>,
   }),
-  columnHelper.accessor((row) => row.quantityInBox, {
-    id: "quantityInBox",
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: () => <span>Quantidade por caixa</span>,
-  }),
   columnHelper.accessor((row) => row.Total, {
-    id: "Total",
+    id: "total",
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Total</span>,
   }),

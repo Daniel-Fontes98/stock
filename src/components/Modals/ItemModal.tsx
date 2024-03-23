@@ -9,12 +9,15 @@ interface ItemModalProps {
 const ItemModal = ({ setMessage, setType }: ItemModalProps) => {
   const [name, setName] = useState("");
   const [alertMin, setAlertMin] = useState<number>();
+  const [alertMax, setAlertMax] = useState<number>();
   const [quantityInBox, setQuantityInBox] = useState<number>();
   const mutation = api.items.insertOne.useMutation();
+  const suppliers = api.suppliers.getAll.useQuery().data;
+  const [supplierId, setSupplierId] = useState("");
 
   const createNewItem = () => {
-    if (alertMin && quantityInBox) {
-      mutation.mutate({ name, alertMin, quantityInBox });
+    if (alertMin && quantityInBox && alertMax) {
+      mutation.mutate({ name, alertMin, alertMax, quantityInBox, supplierId });
       setName("");
       setType("notification");
       setMessage(`Novo item ${name} adicionado`);
@@ -27,67 +30,96 @@ const ItemModal = ({ setMessage, setType }: ItemModalProps) => {
       }, 5000);
     }
   };
-
-  return (
-    <div>
-      <input type="checkbox" id="my-modal-5" className="modal-toggle" />
-      <label htmlFor="my-modal-5" className="modal cursor-pointer">
-        <label className="modal-box relative" htmlFor="">
-          <h3 className="text-lg font-bold">Adicionar Item</h3>
-          <form className="form-control mt-4">
-            <div className="mt-2">
-              <label className="label">
-                <span className="label-text">Nome</span>
-              </label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                type="text"
-                placeholder="Escrever aqui"
-                className="input-bordered input w-full max-w-xs"
-                required
-              />
-            </div>
-            <div className="mt-2">
-              <label className="label">
-                <span className="label-text">Valor Minimo de alerta</span>
-              </label>
-              <input
-                value={alertMin}
-                onChange={(e) => setAlertMin(Number(e.target.value))}
-                type="number"
-                placeholder="Escrever aqui"
-                className="input-bordered input w-full max-w-xs"
-                required
-              />
-            </div>
-            <div className="mt-2">
-              <label className="label">
-                <span className="label-text">Unidades por caixa</span>
-              </label>
-              <input
-                value={quantityInBox}
-                onChange={(e) => setQuantityInBox(Number(e.target.value))}
-                type="number"
-                placeholder="Escrever aqui"
-                className="input-bordered input w-full max-w-xs"
-                required
-              />
-            </div>
-            <div className="mt-6">
-              <label
-                htmlFor="my-modal-5"
-                onClick={createNewItem}
-                className="btn-primary btn"
-              >
-                Submeter
-              </label>
-            </div>
-          </form>
+  if (suppliers) {
+    return (
+      <div>
+        <input type="checkbox" id="my-modal-5" className="modal-toggle" />
+        <label htmlFor="my-modal-5" className="modal cursor-pointer">
+          <label className="modal-box relative" htmlFor="">
+            <h3 className="text-lg font-bold">Adicionar Item</h3>
+            <form className="form-control mt-4" onSubmit={createNewItem}>
+              <div className="mt-2">
+                <label className="label">
+                  <span className="label-text">Nome</span>
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  type="text"
+                  placeholder="Escrever aqui"
+                  className="input-bordered input w-full max-w-xs"
+                  required
+                />
+              </div>
+              <div className="mt-2">
+                <label className="label">
+                  <span className="label-text">Valor Minimo de alerta</span>
+                </label>
+                <input
+                  value={alertMin}
+                  onChange={(e) => setAlertMin(Number(e.target.value))}
+                  type="number"
+                  placeholder="Escrever aqui"
+                  className="input-bordered input w-full max-w-xs"
+                  required
+                />
+              </div>
+              <div className="mt-2">
+                <label className="label">
+                  <span className="label-text">Valor de Rutura</span>
+                </label>
+                <input
+                  value={alertMax}
+                  onChange={(e) => setAlertMax(Number(e.target.value))}
+                  type="number"
+                  placeholder="Escrever aqui"
+                  className="input-bordered input w-full max-w-xs"
+                  required
+                />
+              </div>
+              <div className="mt-2">
+                <label className="label">
+                  <span className="label-text">Unidades por caixa</span>
+                </label>
+                <input
+                  value={quantityInBox}
+                  onChange={(e) => setQuantityInBox(Number(e.target.value))}
+                  type="number"
+                  placeholder="Escrever aqui"
+                  className="input-bordered input w-full max-w-xs"
+                  required
+                />
+              </div>
+              <div className="mt-2">
+                <label className="label">
+                  <span className="label-text">Fornecedor</span>
+                </label>
+                <select
+                  value={supplierId}
+                  onChange={(e) => setSupplierId(e.target.value)}
+                  required
+                >
+                  <option>Escolher um</option>
+                  {suppliers.map((supplier) => (
+                    <option key={supplier.id} value={supplier.id}>
+                      {supplier.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mt-6">
+                <button type="submit">
+                  <label className="btn-primary btn" htmlFor="my-modal-5">
+                    Submeter
+                  </label>
+                </button>
+              </div>
+            </form>
+          </label>
         </label>
-      </label>
-    </div>
-  );
+      </div>
+    );
+  }
+  return <div></div>;
 };
-
 export default ItemModal;

@@ -20,24 +20,14 @@ export const alertColumnDefs = [
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Nome</span>,
   }),
-  columnHelper.accessor((row) => row.item.quantityUnit, {
-    id: "itemQuantityUnit",
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: () => <span>Quantidade (unidades)</span>,
-  }),
-  columnHelper.accessor((row) => row.item.quantityBox, {
-    id: "itemQuantityBox",
-    cell: (info) => <span>{info.getValue()}</span>,
-    header: () => <span>Quantidade (caixas)</span>,
-  }),
   columnHelper.accessor((row) => row.item.Total, {
     id: "Total",
     cell: (info) => <span>{info.getValue()}</span>,
     header: () => <span>Total</span>,
   }),
-  columnHelper.accessor((row) => row.item.alertMin, {
-    id: "itemAlertMin",
+  columnHelper.accessor((row) => row.type, {
+    id: "alert",
     cell: (info) => <span>{info.getValue()}</span>,
-    header: () => <span>Valor Minimo</span>,
+    header: () => <span>Tipo</span>,
   }),
 ];

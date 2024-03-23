@@ -18,7 +18,8 @@ const OperationModal = ({
   const [reference, setReference] = useState("");
   const [description, setDescription] = useState("");
   const [deliveredTo, setDeliveredTo] = useState("");
-  const mutation = api.operations.insertOne.useMutation();
+  const BoxMutation = api.items.updateBoxes.useMutation();
+  const UnitMutation = api.items.updateUnits.useMutation();
   const object = api.items.getOne.useQuery({ id: objectId });
   if (!objectId) return null;
 
@@ -27,16 +28,16 @@ const OperationModal = ({
       if (operationType === "Remover" && object.isFetched) {
         if (unitType === "CX" && quantity > object.data.quantityBox) {
           console.log("HEY");
-          setMessage("Quantidade insuficiente para fazer movimentação");
+          setMessage("Quantidade insuficiente para fazer movimentaÃ§Ã£o");
           setType("error");
           setTimeout(() => {
             setMessage("");
             setType("");
           }, 5000);
           return;
-        } else if (unitType === "UN" && quantity > object.data.quantityUnit) {
+        } else if (unitType === "UN" && quantity > object.data.Total) {
           console.log("HEY");
-          setMessage("Quantidade insuficiente para fazer movimentação");
+          setMessage("Quantidade insuficiente para fazer movimentaÃ§Ã£o");
           setType("error");
           setTimeout(() => {
             setMessage("");
@@ -45,18 +46,32 @@ const OperationModal = ({
           return;
         }
       }
-      mutation.mutate({
-        operationType: operationType,
-        quantity: quantity,
-        unitType: unitType,
-        itemId: objectId,
-        reference: reference,
-        description: description,
-        deliveredTo: deliveredTo,
-      });
+
+      if (unitType === "CX") {
+        BoxMutation.mutate({
+          operationType: operationType,
+          value: quantity,
+          id: objectId,
+          reference: reference,
+          description: description,
+          deliveredTo: deliveredTo,
+        });
+      } else {
+        UnitMutation.mutate({
+          id: objectId,
+          value: quantity,
+          operationType: operationType,
+          quantityBox: object.data.quantityBox,
+          quantityInBox: object.data.quantityInBox,
+          quantityUnit: object.data.quantityUnit,
+          reference: reference,
+          deliveredTo: deliveredTo,
+          description: description,
+        });
+      }
 
       setMessage(
-        `Operação ${operationType} ${quantity} ${unitType} ${object.data.name} executado com sucesso `
+        `OperaÃ§Ã£o ${operationType} ${quantity} ${unitType} ${object.data.name} executado com sucesso `
       );
       setType("notification");
       setTimeout(() => {
@@ -79,7 +94,7 @@ const OperationModal = ({
           <form className="form-control mt-4">
             <div className="mt-2">
               <label className="label">
-                <span className="label-text">Tipo de Operação</span>
+                <span className="label-text">Tipo de OperaÃ§Ã£o</span>
               </label>
               <select
                 onChange={(event) => setOperationType(event.target.value)}
@@ -137,7 +152,7 @@ const OperationModal = ({
             </div>
             <div className="mt-2">
               <label className="label">
-                <span className="label-text">Referência</span>
+                <span className="label-text">ReferÃªncia</span>
               </label>
               <input
                 type="text"
@@ -149,7 +164,7 @@ const OperationModal = ({
             </div>
             <div className="mt-2">
               <label className="label">
-                <span className="label-text">Descrição</span>
+                <span className="label-text">DescriÃ§Ã£o</span>
               </label>
               <input
                 type="text"

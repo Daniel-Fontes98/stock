@@ -46,15 +46,15 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
   };
   if (rows && headers && data)
     return (
-      <div>
-        <table className="table-zebra my-4 table w-full">
+      <div className="overflow-x-auto">
+        <table className="table-zebra my-4 table  w-full">
           <thead>
             <tr>
               {headers.map((header) => {
                 const direction = header.column.getIsSorted();
                 const arrow = {
-                  asc: "🔼",
-                  desc: "🔽",
+                  asc: "ð¼",
+                  desc: "ð½",
                 };
 
                 const sort_indicator = direction && arrow[direction];
