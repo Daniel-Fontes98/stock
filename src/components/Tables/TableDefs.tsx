@@ -1,4 +1,4 @@
-import { Alert, Operation } from "@prisma/client";
+import { Alert, Operation, Supplier } from "@prisma/client";
 import {
   SortingState,
   useReactTable,
@@ -14,7 +14,7 @@ import Filter from "./ColumnFilter";
 import Pagination from "./Pagination";
 
 interface TableProps {
-  data: (Alert | Operation)[];
+  data: (Alert | Operation | Supplier)[];
   columnDefs: any;
 }
 

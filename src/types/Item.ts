@@ -4,4 +4,7 @@ export type Item = {
   quantityBox: number;
   quantityInBox: number;
   Total: number;
+  supplier: {
+    name: string;
+  };
 };

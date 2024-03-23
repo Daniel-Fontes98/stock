@@ -2,14 +2,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import ClientSideTable from "~/components/Tables/ClientSideTable";
-import HistoryModal from "~/components/Modals/HistoryModal";
-import ItemModal from "~/components/Modals/ItemModal";
-import OperationModal from "~/components/Modals/OperationModal";
 import Notification from "~/components/Notification";
-import AlertModal from "~/components/Modals/AlertModal";
+import SupplierModal from "~/components/Modals/SupplierModal";
+import Sidebar from "~/components/Sidebar/Sidebar";
 
 const Home: NextPage = () => {
-  const [objectId, setObjectId] = useState("");
   const [message, setMessage] = useState("");
   const [type, setType] = useState("");
 
@@ -20,32 +17,19 @@ const Home: NextPage = () => {
         <meta name="description" content="Gerado por Daniel" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <div className="container mb-5">
-          <label htmlFor="my-modal-5" className="btn-info btn">
-            Adicionar Item
-          </label>
-          <label htmlFor="my-modal-6" className="btn-warning btn ml-5">
-            Ver Historico
-          </label>
-          <label htmlFor="my-modal-7" className="btn-error btn ml-5">
-            Ver Alertas
-          </label>
+      <div className="drawer-mobile drawer">
+        <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+        <div className="drawer-content flex flex-col items-center justify-center">
+          <main className="absolute bottom-6 left-96 right-6 top-6 min-h-screen items-center justify-center">
+            <div className="container mx-auto">
+              <Notification message={message} type={type} />
+              <SupplierModal setMessage={setMessage} setType={setType} />
+              <ClientSideTable />
+            </div>
+          </main>
         </div>
-
-        <div className="container mx-auto">
-          <Notification message={message} type={type} />
-          <AlertModal />
-          <HistoryModal />
-          <ItemModal setMessage={setMessage} setType={setType} />
-          <OperationModal
-            objectId={objectId}
-            setMessage={setMessage}
-            setType={setType}
-          />
-          <ClientSideTable setObjectId={setObjectId} />
-        </div>
-      </main>
+        <Sidebar />
+      </div>
     </>
   );
 };

@@ -4,6 +4,11 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 export const alertRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.alert.findMany({
+      where: {
+        NOT: {
+          type: "Normal",
+        },
+      },
       include: {
         item: true,
       },
@@ -13,6 +18,7 @@ export const alertRouter = createTRPCRouter({
     .input(
       z.object({
         itemId: z.string(),
+        type: z.string(),
       })
     )
     .mutation(async (opts) => {
@@ -23,27 +29,59 @@ export const alertRouter = createTRPCRouter({
   getOne: publicProcedure
     .input(
       z.object({
-        id: z.string(),
+        itemId: z.string(),
       })
     )
     .query((opts) => {
       return opts.ctx.prisma.alert.findFirst({
         where: {
-          id: opts.input.id,
+          itemId: opts.input.itemId,
         },
       });
     }),
   delete: publicProcedure
     .input(
       z.object({
-        id: z.string(),
+        itemId: z.string(),
       })
     )
     .mutation(async (opts) => {
       const { input } = opts;
       await opts.ctx.prisma.alert.delete({
         where: {
-          id: input.id,
+          itemId: input.itemId,
+        },
+      });
+    }),
+  aggravate: publicProcedure
+    .input(
+      z.object({
+        itemId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.alert.update({
+        where: {
+          itemId: input.itemId,
+        },
+        data: {
+          type: "Rutura",
+        },
+      });
+    }),
+  appease: publicProcedure
+    .input(
+      z.object({
+        itemId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.alert.update({
+        where: {
+          itemId: input.itemId,
+        },
+        data: {
+          type: "Minimo",
         },
       });
     }),

@@ -8,20 +8,18 @@ import {
   type ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+import { useRouter } from "next/router";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { api } from "~/utils/api";
 import Filter from "./ColumnFilter";
 import { itemColumnDefs } from "./ItemColumnDefs";
 import Pagination from "./Pagination";
 
-interface objectState {
-  setObjectId: Dispatch<SetStateAction<string>>;
-}
-
-const ClientSideTable = ({ setObjectId }: objectState) => {
+const ClientSideTable = () => {
   const data = api.items.getAll.useQuery().data;
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const router = useRouter();
 
   const table = useReactTable({
     columns: itemColumnDefs,
@@ -42,12 +40,13 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
   const rows = table?.getRowModel().rows;
 
   const handleClick = (id: string) => {
-    setObjectId(id);
+    router.push(`/Operation/${id}`);
   };
+
   if (rows && headers && data)
     return (
-      <div>
-        <table className="table-zebra my-4 table w-full">
+      <div className="overflow-x-auto">
+        <table className="table-zebra my-4 table  w-full">
           <thead>
             <tr>
               {headers.map((header) => {
@@ -86,19 +85,16 @@ const ClientSideTable = ({ setObjectId }: objectState) => {
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr key={row.id}>
+              <tr
+                key={row.id}
+                onClick={() => handleClick(data[Number(row.id)]!.id)}
+                className="hover:cursor-pointer"
+              >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-                <label
-                  htmlFor="my-modal-4"
-                  className="btn-accent btn-md btn ml-6  w-3/4 text-xs"
-                  onClick={() => handleClick(data[Number(row.id)]!.id)}
-                >
-                  Movimentar
-                </label>
               </tr>
             ))}
           </tbody>
