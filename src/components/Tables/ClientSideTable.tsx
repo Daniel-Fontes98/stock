@@ -9,7 +9,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import { useRouter } from "next/router";
-import { type Dispatch, type SetStateAction, useState } from "react";
+import { useState } from "react";
 import { api } from "~/utils/api";
 import Filter from "./ColumnFilter";
 import { itemColumnDefs } from "./ItemColumnDefs";
@@ -40,7 +40,7 @@ const ClientSideTable = () => {
   const rows = table?.getRowModel().rows;
 
   const handleClick = (id: string) => {
-    router.push(`/Operation/${id}`);
+    void router.push(`/Operation/${id}`);
   };
 
   if (rows && headers && data)

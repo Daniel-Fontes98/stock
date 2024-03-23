@@ -1,11 +1,10 @@
-import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Navbar from "~/components/Navbar/Navbar";
 import { useField } from "~/hooks/useField";
 import { api } from "~/utils/api";
 
-const createItem: NextPage = () => {
+const CreateItem = () => {
   const name = useField("name");
   const [alertMin, setAlertMin] = useState<number>();
   const [alertMax, setAlertMax] = useState<number>();
@@ -15,10 +14,10 @@ const createItem: NextPage = () => {
   const mutation = api.items.insertOne.useMutation();
   const router = useRouter();
 
-  const handleSubmit = async (event: React.SyntheticEvent) => {
+  const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     if (alertMin && alertMax && quantityInBox) {
-      const user = await mutation.mutate({
+      const user = mutation.mutate({
         name: name.value,
         alertMin: alertMin,
         alertMax: alertMax,
@@ -27,7 +26,7 @@ const createItem: NextPage = () => {
       });
     }
 
-    router.push("/");
+    void router.push("/");
   };
 
   if (suppliers) {
@@ -39,7 +38,7 @@ const createItem: NextPage = () => {
             <h3 className="text-lg font-bold">Adicionar Item</h3>
           </div>
           <div className="flex items-center justify-center">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <div className="form-control mb-3 w-full max-w-lg">
                 <label className="label">
                   <span className="label-text">Nome do artigo</span>
@@ -123,4 +122,4 @@ const createItem: NextPage = () => {
   }
 };
 
-export default createItem;
+export default CreateItem;

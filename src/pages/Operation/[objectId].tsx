@@ -1,12 +1,10 @@
-import { Item } from "@prisma/client";
-import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import Navbar from "~/components/Navbar/Navbar";
 import { useField } from "~/hooks/useField";
 import { api } from "~/utils/api";
 
-const createOperation: NextPage = () => {
+const CreateOperation = () => {
   const [operationType, setOperationType] = useState("");
   const [quantity, setQuantity] = useState<number>(0);
   const [unitType, setUnitType] = useState("");
@@ -54,7 +52,7 @@ const createOperation: NextPage = () => {
           description: description.value,
         });
       }
-      router.push("/");
+      void router.push("/");
     }
   };
 
@@ -162,4 +160,4 @@ const createOperation: NextPage = () => {
   }
 };
 
-export default createOperation;
+export default CreateOperation;

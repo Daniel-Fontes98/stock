@@ -1,7 +1,6 @@
-import { NextComponentType } from "next";
 import Link from "next/link";
 
-const Sidebar: NextComponentType = () => {
+const Sidebar = () => {
   return (
     <div className="drawer-side fixed left-0 top-0 h-full w-80 bg-slate-400">
       <label htmlFor="my-drawer-2" className="drawer-overlay "></label>

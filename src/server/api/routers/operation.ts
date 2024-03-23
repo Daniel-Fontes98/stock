@@ -1,4 +1,4 @@
-import { Item } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
@@ -32,7 +32,8 @@ export const operationRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       //Update Totals
-      const operation = input.operationType === 'Adicionar' ? 'increment' : 'decrement'
+      const operation =
+        input.operationType === "Adicionar" ? "increment" : "decrement";
 
       const result: Item = await ctx.prisma.item.update({
         where: {
