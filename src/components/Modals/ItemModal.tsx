@@ -16,7 +16,7 @@ const ItemModal = ({ setMessage, setType }: ItemModalProps) => {
   const [supplierId, setSupplierId] = useState("");
 
   const createNewItem = () => {
-    if (alertMin && quantityInBox && alertMax) {
+    if (alertMin && quantityInBox && alertMax && supplierId !== "") {
       mutation.mutate({ name, alertMin, alertMax, quantityInBox, supplierId });
       setName("");
       setType("notification");
